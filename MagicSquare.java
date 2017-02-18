@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class MagicSquare
 {
     public boolean isSquare ( int[][] input )
@@ -9,58 +11,88 @@ public class MagicSquare
 
     }
 
+    public int sum ( int[] input )
+    {
+        int sum = 0;
+        for ( int i : input )
+            sum += i;
+        
+        return sum;
+    }
+
     public boolean isMagicSquare ( int[][] input )
     {
-        int comparedRow = 0;
-        int sumRow = 0;
-        int sumCol = 0;
-        boolean value = true;
+        boolean value = false;
 
-        for ( int row = 0; row < input.length; row++ )
-        { 
-            
+        if ( isSquare( input ) )
+        {
+            int comparedValue = 0;
+            int length = input.length;
+            int [] values = new int [ length ];
 
-            if ( sumRow != compareRow || sumCol != compareRow )
-            {
-                value = false;
-                break;
-            }
-            else
-                comparedRow = sumRow;
+            for ( int counter = 0; counter < length; counter++ )
+                values [ counter ] = counter;
 
-            for ( int col = 0; col < input[row].length; col++ )
-            {  
-                sumRow += input[row][col];
 
-                int compareCol = 0;
-                for ( int rowOf = 0; rowOf < input.length; rowOf ++ )
+            for ( int row = 0; row < length; row++ )
+            { 
+                int [] rowNum = new int [ length ];
+                int [] colNum = new int [ length ];
+                int [] diagNum = new int [ length ];
+
+                for ( int index = 0; index < length; index ++ )
                 {
-                    
-                    sumCol += input[rowOf][col];
+                    rowNum [ index ] = input [row][ values [ index ] ];
+                    colNum [ index ] = input [ values [ index ] ][row];
+                    diagNum [ index ] = input [ values [ index ] ][ values [ index ] ];
 
-                    if ( rowOf == input.length - 1 )
-                    {
-                        if ( compareCol == 0 )
-                        {
-                            compareCol = sumCol;
-                        }
-                        else if ( sumCol != compareCol )
-                        {
-                            value = false;
-                            break;
-                        }
-                        else
-                            compareCol = sumCol;
-
-                    }
-                
                 }
 
-            }  
+                if ( sum(rowNum) != sum(colNum) || sum(rowNum) != sum(diagNum) )
+                    break;
 
+                if ( row == length - 1 )
+                    value = true;
+
+            }
         }
         
-        return value;
+         return value;
+
+    }
+
+    public static void main ( String[] args )
+    {
+        int lengthX = 0;
+        int lengthY = 0;
+
+        Scanner ss = new Scanner ( System.in );
+        MagicSquare obj = new MagicSquare();
+
+        System.out.println ( "What is the x dimension of your array?" );
+        lengthX = ss.nextInt();
+        System.out.println ( "What is the y dimension of your array?" );
+        lengthY = ss.nextInt();
+
+       int[][] square = new int [lengthX][lengthY];
+        if ( !obj.isSquare ( square ) )
+            System.out.println ( "Warning: The inputed array isn't a square" );
+        else
+        {
+            for ( int x = 0; x < square.length; x ++ )
+            {
+                for ( int y = 0; y < square [ 0 ].length; y++ )
+                {
+                    System.out.println ( "Please input a value for location: " + x + " " + y );
+                    square [ x ][ y ] = ss.nextInt();
+                }
+            }
+        
+            if ( !obj.isMagicSquare ( square ) )
+                System.out.println ( "Sorry this isn't a magic sqaure. " );
+            else
+                System.out.println ( "This is a magic square! " );
+        }
 
     }
 
